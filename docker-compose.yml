@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:15-alpine
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_PASSWORD: tbpoc123
+
+  backend:
+    build: ./service
+    ports: ["4000:4000"]
+    depends_on: [db]
+
+  frontend:
+    build: ./ui
+    ports: ["3000:3000"]
