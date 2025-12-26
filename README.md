@@ -1,8 +1,8 @@
 # tb-poc-login
 ### How to use project
-```
-docker compose up --build -d
-```
+1. Run `openssl rand -base64 64` to generate a secure `JWT_SECRET`.
+2. Set up `.env` files for both the `api` and `ui` services, following the provided `.env.example` files.
+3. Run `docker compose up --build -d` to start the application.
 
 ### Demo
 ![Login](public/images/ui-1.png)
