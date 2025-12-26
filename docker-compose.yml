@@ -1,15 +1,49 @@
 services:
   db:
     image: postgres:15-alpine
-    ports: ["5432:5432"]
+    container_name: app-postgres
+    ports:
+      - "5432:5432"
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: tbpoc123
+      POSTGRES_DB: appdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  backend:
-    build: ./service
-    ports: ["4000:4000"]
-    depends_on: [db]
+  api:
+    build: ./api
+    container_name: app-api
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_PASSWORD=tbpoc123
+      - DB_NAME=appdb
+      - DB_PORT=5432
+      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+      - PORT=8080
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
 
-  frontend:
+  ui:
     build: ./ui
-    ports: ["3000:3000"]
+    container_name: app-ui
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8080
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
