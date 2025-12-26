@@ -1,6 +1,6 @@
 {
   "include": [
-    "src/**/*",         // เปลี่ยนจาก **/* เพื่อความแม่นยำ
+    "src/**/*",
     "vite.config.ts"
   ],
   "compilerOptions": {

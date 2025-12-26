@@ -1,100 +1,97 @@
-import React, { useState } from 'react';
-import { 
-  Container, Box, Typography, TextField, 
-  Button, Checkbox, FormControlLabel, Paper, Alert 
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  Box,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  Alert,
+  Container,
 } from '@mui/material';
-// import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { useAuth } from '@/hooks/useAuth';
 
- const LoginPage = () => {
+export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // ใช้ React Query เชื่อมต่อกับ Go Backend (Echo)
-//   const loginMutation = useMutation({
-//     mutationFn: async (payload: any) => {
-//       const response = await axios.post('http://localhost:8080/login', payload);
-//       return response.data;
-//     },
-//     onSuccess: (data) => {
-//       // เก็บ Token และย้ายหน้า (ในอนาคต)
-//       localStorage.setItem('token', data.token);
-//       window.location.href = '/dashboard';
-//     }
-//   });
+  const { login, isLoginLoading, loginError } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // loginMutation.mutate({ email, password });
+    login({ email, password });
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box className="min-h-screen flex flex-col justify-center py-12">
-        <Paper elevation={3} className="p-8 rounded-2xl">
-          <Box className="text-center mb-8">
-            <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
-              ยินดีต้อนรับ
+    <Box 
+    className="min-h-screen flex items-center justify-center"
+    sx={{
+        backgroundImage: 'url(/images/bg.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.4)',
+          backdropFilter: 'blur(2px)',
+        }
+      }}
+    >
+    <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
+        <Card className="w-full" >
+          <CardContent className="p-8">
+            <Typography variant="h4" className="mb-6 text-center font-bold">
+              เข้าสู่ระบบ
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              กรุณาเข้าสู่ระบบเพื่อจัดการข้อมูลของคุณ
-            </Typography>
-          </Box>
 
-          <form onSubmit={handleSubmit}>
-            <Box className="space-y-4"  sx={{ '& .MuiTextField-root, & .MuiButtonBase-root': { m: 1 } }}>
-              {/* {loginMutation.isError && (
-                <Alert severity="error">อีเมลหรือรหัสผ่านไม่ถูกต้อง</Alert>
-              )} */}
+            {loginError && (
+              <Alert severity="error" className="mb-4">
+                {loginError.response?.data?.error || 'เข้าสู่ระบบล้มเหลว'}
+              </Alert>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4" >
               <TextField
                 fullWidth
-                label="อีเมล"
-                variant="outlined"
+                label="Email"
                 type="email"
-                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
+                margin="normal"
               />
+
               <TextField
                 fullWidth
-                label="รหัสผ่าน"
-                variant="outlined"
+                label="Password"
                 type="password"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                margin="normal"
               />
+
               <Button
                 fullWidth
                 variant="contained"
-                size="large"
                 type="submit"
-                // disabled={loginMutation.isPending}
-                className="py-3 font-bold"
+                disabled={isLoginLoading}
+                className="py-3"
               >
-                เข้าสู่ระบบ
-                {/* {loginMutation.isPending ? 'กำลังตรวจสอบ...' : 'เข้าสู่ระบบ'} */}
+                {isLoginLoading ? 'กำลังเข้าระบบ...' : 'ลงชื่อเข้าใช้งาน'}
               </Button>
-              <Box className="mt-6 text-center">
-        <Typography variant="body2" color="textSecondary">
-            ยังไม่มีบัญชีผู้ใช้งาน?{' '}
-            <Typography 
-            component="button" 
-            variant="body2" 
-            color="primary" 
-            className="font-bold border-none bg-transparent cursor-pointer hover:underline p-0"
-            onClick={() => window.location.href = '/register'}
-            >
-            สมัครสมาชิกใหม่
-            </Typography>
-        </Typography>
-        </Box>
-            </Box>
-          </form>
-        </Paper>
-      </Box>
-    </Container>
-  );
-};
 
-export default LoginPage
+              <Typography className="text-center mt-12">
+                ยังไม่มีบัญชีผู้ใช้งาน?{' '}
+                <Link to="/register" className="text-blue-600 hover:underline">
+                  สมัครสมาชิกใหม่
+                </Link>
+              </Typography>
+            </form>
+          </CardContent>
+        </Card>
+    </Container>
+    </Box>
+  );
+}
