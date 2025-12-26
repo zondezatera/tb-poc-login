@@ -126,6 +126,7 @@ export default function RegisterPage() {
                 type="submit"
                 disabled={isRegisterLoading}
                 className="py-3"
+                style={{margin:'10px 0px 10px 0px'}}
                 >
                 {isRegisterLoading ? 'กำลังสร้างบัญชี...' : 'ลงทะเบียน'}
                 </Button>

@@ -78,6 +78,7 @@ export default function LoginPage() {
                 type="submit"
                 disabled={isLoginLoading}
                 className="py-3"
+                style={{margin:'10px 0px 10px 0px'}}
               >
                 {isLoginLoading ? 'กำลังเข้าระบบ...' : 'ลงชื่อเข้าใช้งาน'}
               </Button>

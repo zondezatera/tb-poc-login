@@ -13,24 +13,15 @@ func main() {
 	}
 
 	name := os.Args[1]
-
-	// สร้าง directory ถ้ายังไม่มี
 	if err := os.MkdirAll("migrations", 0755); err != nil {
 		log.Fatal("Failed to create migrations directory:", err)
 	}
-
-	// หา version ล่าสุด
 	version := getNextVersion()
-
 	upFile := fmt.Sprintf("migrations/%06d_%s.up.sql", version, name)
 	downFile := fmt.Sprintf("migrations/%06d_%s.down.sql", version, name)
-
-	// สร้างไฟล์ .up.sql
 	if err := os.WriteFile(upFile, []byte(upTemplate), 0644); err != nil {
 		log.Fatal("Failed to create up file:", err)
 	}
-
-	// สร้างไฟล์ .down.sql
 	if err := os.WriteFile(downFile, []byte(downTemplate), 0644); err != nil {
 		log.Fatal("Failed to create down file:", err)
 	}

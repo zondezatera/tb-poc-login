@@ -13,15 +13,14 @@ import (
 func main() {
 	// Database URL
 	dbURL := fmt.Sprintf(
-		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		getEnv("DB_USER", "postgres"),
-		getEnv("DB_PASSWORD", "tbpoc123"),
-		getEnv("DB_HOST", "localhost"),
-		getEnv("DB_PORT", "5432"),
-		getEnv("DB_NAME", "appdb"),
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Bangkok",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_PORT"),
 	)
 
-	// สร้าง migrate instance
 	m, err := migrate.New(
 		"file://migrations",
 		dbURL,
@@ -31,7 +30,6 @@ func main() {
 	}
 	defer m.Close()
 
-	// รับ command จาก arguments
 	command := "up"
 	if len(os.Args) > 1 {
 		command = os.Args[1]
